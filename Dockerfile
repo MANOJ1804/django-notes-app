@@ -1,17 +1,5 @@
-FROM ubuntu:18.04
-
-LABEL maintainer="m24te28"
-
-RUN sudo apt-get update && \
-    sudo apt-get install -y -q curl gnupg2
-RUN curl http://nginx.org/keys/nginx_signing.key | apt-key add -
-
-RUN sudo apt-get update && \
-    sudo apt-get install -y -q nginx
-
-ADD nginx.conf /etc/nginx/
-ADD server.conf /etc/nginx/conf.d
-
-EXPOSE 443 80
-
+FROM ubuntu:latest
+RUN apt-get -y update && apt-get -y install nginx
+COPY content/index.html /var/www/html/index.nginx-debian.html
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
