@@ -1,20 +1,30 @@
-FROM python:3.9
+#
+# Nginx Dockerfile
+#
+# https://github.com/dockerfile/nginx
+#
 
-WORKDIR /app/backend
+# Pull base image.
+FROM dockerfile/ubuntu
 
-COPY requirements.txt /app/backend
-RUN apt-get update \
-    && apt-get upgrade -y \
-    && apt-get install -y gcc default-libmysqlclient-dev pkg-config \
-    && rm -rf /var/lib/apt/lists/*
+# Install Nginx.
+RUN \
+  add-apt-repository -y ppa:nginx/stable && \
+  apt-get update && \
+  apt-get install -y nginx && \
+  rm -rf /var/lib/apt/lists/* && \
+  echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
+  chown -R www-data:www-data /var/lib/nginx
 
+# Define mountable directories.
+VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/www/html"]
 
-# Install app dependencies
-RUN pip install mysqlclient
-RUN pip install --no-cache-dir -r requirements.txt
+# Define working directory.
+WORKDIR /etc/nginx
 
-COPY . /app/backend
+# Define default command.
+CMD ["nginx"]
 
-EXPOSE 8000
-#RUN python manage.py migrate
-#RUN python manage.py makemigrations
+# Expose ports.
+EXPOSE 80
+EXPOSE 443
