@@ -20,6 +20,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
+                echo "Build Docker Images"
                 sh 'docker image build -t django-notes-app:latest . '
             }
         }
