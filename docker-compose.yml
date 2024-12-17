@@ -3,4 +3,4 @@ services:
   web:
     images: manojkumarab/django-notes-app:latest
     ports:
-      - "8000:80"
+      - "9000:80"
